@@ -9,8 +9,10 @@
 @anthonyramosofficial
 
 ## Open user_password and write your instagram email and password
-\
+
+
 # Using Task Scheduler to automatically run python files
+
 
 ## read scrape_insta_url_instructions and set up auto run for scrape_url.py
 
