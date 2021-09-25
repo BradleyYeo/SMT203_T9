@@ -1,4 +1,4 @@
-# Scrape Instagram Comments\
+# Scrape Instagram Comments
 
 ## Open 10_insta_handle and put your 10 celebrities instagram handle in this format
 
@@ -8,9 +8,9 @@
 @annakendrick47\
 @anthonyramosofficial
 
-## Open user_password and write your instagram email and password\\
-
-# Using Task Scheduler to automatically run python files\
+## Open user_password and write your instagram email and password
+\
+# Using Task Scheduler to automatically run python files
 
 ## read scrape_insta_url_instructions and set up auto run for scrape_url.py
 
