@@ -10,6 +10,8 @@
 
 ## Open user_password and write your instagram email and password
 
+## Open command prompt and pip install selenium
+
 
 # Using Task Scheduler to automatically run python files
 
