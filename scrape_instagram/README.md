@@ -2,10 +2,10 @@
 
 ## Open 10_insta_handle and put your 10 celebrities instagram handle in this format
 
-@adele
-@alexshibutani
-@amberheard
-@annakendrick47
+@adele\
+@alexshibutani\
+@amberheard\
+@annakendrick47\
 @anthonyramosofficial
 
 ## Open user_password and write your instagram email and password
