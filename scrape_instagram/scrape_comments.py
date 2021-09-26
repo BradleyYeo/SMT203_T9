@@ -8,8 +8,8 @@ import os.path
 import datetime
 from dateutil.relativedelta import relativedelta
 
-# target_date_list = ['2020-01','2020-02','2020-03','2020-04','2020-05','2020-06','2020-07','2020-08','2020-09','2020-10','2020-11','2020-12']
-target_date_list = ['2020-11','2020-12']
+target_date_list = ['2020-01','2020-02','2020-03','2020-04','2020-05','2020-06','2020-07','2020-08','2020-09','2020-10','2020-11','2020-12']
+# target_date_list = ['2020-11','2020-12']
 
 with open('user_password.txt', 'r') as f:
     instagram_email = f.readline().split('=')[1] .strip(' \n')   
