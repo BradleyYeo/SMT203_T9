@@ -8,7 +8,9 @@ import os.path
 import datetime
 from dateutil.relativedelta import relativedelta
 
-target_date_list = ['2020-01','2020-02','2020-03','2020-04','2020-05','2020-06','2020-07','2020-08','2020-09','2020-10','2020-11','2020-12']
+# target_date_list = ['2020-01','2020-02','2020-03','2020-04','2020-05','2020-06','2020-07','2020-08','2020-09','2020-10','2020-11','2020-12']
+target_date_list = ['2020-11','2020-12']
+
 with open('user_password.txt', 'r') as f:
     instagram_email = f.readline().split('=')[1] .strip(' \n')   
     instagram_password = f.readline().split('=')[1] .strip(' \n')
@@ -44,8 +46,7 @@ time.sleep(10)
 
 for target_date in target_date_list:
     posts_to_scrape_list = []
-    data = {"username": [], "datetime": [], "comment": [], "likes": [], "url": []}
-    bsearch_count = 3
+    bsearch_count = 10
     target_date = datetime.datetime.strptime(target_date, '%Y-%m')
     while bsearch_count:
         lower = -1
@@ -54,7 +55,8 @@ for target_date in target_date_list:
         while lower+1 != upper:
             temp_url = all_url_list[mid]
             driver.get(temp_url)
-            temp_date = driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/div[1]/article/div/div[2]/div/div[2]/div[1]/ul/div/li/div/div/div[2]/div/div/time').get_attribute('datetime')
+            # temp_date = driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/div[1]/article/div/div[2]/div/div[2]/div[1]/ul/div/li/div/div/div[2]/div/div/time').get_attribute('datetime')
+            temp_date = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div/div[2]/div/div[2]/div[1]/ul/div/li/div/div/div[2]/div/div/time'))).get_attribute('datetime')
             temp_date = datetime.datetime.strptime(temp_date[:7], '%Y-%m')
             if temp_date > target_date:
                 lower = mid
@@ -74,6 +76,7 @@ for target_date in target_date_list:
     posts_to_scrape_list += [all_url_list[mid-1], all_url_list[mid+1]]
 
     for i in range(3):
+        data = {"username": [], "datetime": [], "comment": [], "likes": [], "url": []}
         if i != 0:
             temp_url = posts_to_scrape_list[i]
             driver.get(temp_url)
@@ -86,7 +89,7 @@ for target_date in target_date_list:
             except:
                 try_click_plus_btn_count -= 1
         
-        try_scrape_comments_count = 10
+        try_scrape_comments_count = 3
         card_index_before_error = None
         while try_scrape_comments_count:
             try:
@@ -109,12 +112,12 @@ for target_date in target_date_list:
             except:
                 try_scrape_comments_count -= 1
                 time.sleep(3)
-    # save the data
-    if os.path.isfile(output_csv_file):
-        df = pd.read_csv(output_csv_file).drop(['Unnamed: 0'], axis=1)
-        pd.concat([df, pd.DataFrame(data)]).to_csv(output_csv_file)
-    else:
-        pd.DataFrame(data).to_csv(output_csv_file)
+        # save the data
+        if os.path.isfile(output_csv_file):
+            df = pd.read_csv(output_csv_file).drop(['Unnamed: 0'], axis=1)
+            pd.concat([df, pd.DataFrame(data)]).to_csv(output_csv_file)
+        else:
+            pd.DataFrame(data).to_csv(output_csv_file)
 
 # close window
 driver.close()
