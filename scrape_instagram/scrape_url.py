@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import pandas as pd
 
@@ -22,8 +24,7 @@ if not instagram_handle:
     print('1'+1)
 
 #specify the path to chromedriver.exe (download and save on your computer)
-driver = webdriver.Chrome("chromedriver.exe")
-
+driver = webdriver.Chrome(ChromeDriverManager().install())
 #open the webpage
 driver.get("http://www.instagram.com")
 
@@ -47,7 +48,7 @@ list_url = []
 instagram_bio = ''
 
 # get instagram bio
-bio_container = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/div[2]')))
+bio_container = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/div[2]')))
 all_children_by_xpath = bio_container.find_elements_by_xpath(".//*")
 for ele in all_children_by_xpath:
     if ele.text:

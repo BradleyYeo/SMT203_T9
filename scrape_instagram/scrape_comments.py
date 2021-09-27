@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import pandas as pd
 import os.path
@@ -25,7 +27,7 @@ url_csv_file = f"{handle}_url.csv"
 output_csv_file = f"{handle}_comments.csv" 
 all_url_list = list(pd.read_csv(url_csv_file)['url'])
 
-driver = webdriver.Chrome("chromedriver.exe")
+driver = webdriver.Chrome(ChromeDriverManager().install())
 #open the webpage
 driver.get("http://www.instagram.com")
 
