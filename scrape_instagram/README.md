@@ -8,9 +8,9 @@
 @annakendrick47\
 @anthonyramosofficial
 
-## Open user_password and write your instagram email and password
+### Open user_password and write your instagram email and password
 
-## Open command prompt and pip install selenium
+### Open command prompt and pip install selenium and pip install webdriver-manager
 
 
 # Using Task Scheduler to automatically run python files
