@@ -65,10 +65,14 @@ while try_count:
     except:
         time.sleep(2)
         try_count -= 1
-for i in range(1, 4):
-    for j in range(1, 4):
-        temp_url = section.find_element_by_xpath(f'./div[{i}]/div[{j}]/a').get_attribute("href")
-        list_url.append(temp_url)
+    
+try:
+    for i in range(1, 4):
+        for j in range(1, 4):
+            temp_url = section.find_element_by_xpath(f'./div[{i}]/div[{j}]/a').get_attribute("href")
+            list_url.append(temp_url)
+except:
+    pass
 
 # Get scroll height
 last_height = driver.execute_script("return document.body.scrollHeight")
