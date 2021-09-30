@@ -48,7 +48,7 @@ list_url = []
 instagram_bio = ''
 
 # get instagram bio
-bio_container = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/div[2]')))
+bio_container = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "-vDIg")))
 all_children_by_xpath = bio_container.find_elements_by_xpath(".//*")
 for ele in all_children_by_xpath:
     if ele.text:
