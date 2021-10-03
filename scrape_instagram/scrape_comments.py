@@ -57,8 +57,7 @@ for target_date in target_date_list:
         while lower+1 != upper:
             temp_url = all_url_list[mid]
             driver.get(temp_url)
-            # temp_date = driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/div[1]/article/div/div[2]/div/div[2]/div[1]/ul/div/li/div/div/div[2]/div/div/time').get_attribute('datetime')
-            temp_date = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div/div[2]/div/div[2]/div[1]/ul/div/li/div/div/div[2]/div/div/time'))).get_attribute('datetime')
+            temp_date = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "time[class='_1o9PC Nzb55']"))).get_attribute('datetime')
             temp_date = datetime.datetime.strptime(temp_date[:7], '%Y-%m')
             if temp_date > target_date:
                 lower = mid
