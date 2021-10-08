@@ -17,7 +17,7 @@ with open('10_insta_handle.txt', 'r') as f:
 
 copied_list = instagram_handle_list[:]
 
-for instagram_handle in range(len(instagram_handle_list)):
+for instagram_handle in instagram_handle_list:
     instagram_handle = instagram_handle.strip('@\n')
 
     if not instagram_handle:
