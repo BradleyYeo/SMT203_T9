@@ -20,8 +20,19 @@ with open('user_password.txt', 'r') as f:
     instagram_password = f.readline().split('=')[1] .strip(' \n')
 
 with open('successful_insta_handle.txt', 'r') as f:
-    handle = f.readline().strip('@\n')
+    handle_list = f.readlines()
+    handle_list.append(handle_list.pop(0))
 
+with open('successful_insta_handle.txt', 'w') as f:
+    for line in handle_list:
+        if '\n' not in line:
+            line += '\n'
+        f.write(line)
+
+handle = handle_list[-1].strip('@\n')
+
+with open('debug_info.txt', 'w') as f:
+    f.write(handle)
 
 if not handle:
     print('1'+1)
@@ -85,21 +96,29 @@ try:
                     target_date_list.append((datetime.datetime.strptime(target_date_list[-1], '%Y-%m')+relativedelta(months=-1)).strftime('%Y-%m'))
                 bsearch_count = 0
 
-        while len(posts_to_scrape_list) < 3:
-            index_left = mid-1
-            index_right = mid+1
+        index_left, index_right = mid-1, mid+1
+        left_url, right_url = None, None
+        if index_left >= 0:
             left_url = all_url_list[index_left]
+        if index_right < len(all_url_list):
             right_url = all_url_list[index_right]
-            if left_url in df_set_url:
-                index_left -= 1
-                left_url = all_url_list[index_left]
-            if right_url in df_set_url:
-                index_right += 1
-                right_url = all_url_list[index_right]
+        
+        while left_url in df_set_url:
+            index_left -= 1
+            if index_left < 0:
+                break
+            left_url = all_url_list[index_left]
+        while right_url in df_set_url:
+            index_right += 1
+            if index_right >= len(all_url_list):
+                break
+            right_url = all_url_list[index_right]
+        
+        if left_url and right_url:
             posts_to_scrape_list.append(left_url) 
             posts_to_scrape_list.append(right_url)
 
-        for i in range(3):
+        for i in range(len(posts_to_scrape_list)):
             data = {"username": [], "datetime": [], "comment": [], "likes": [], "url": []}
             if i != 0:
                 temp_url = posts_to_scrape_list[i]
@@ -150,22 +169,21 @@ try:
     # close window
     driver.close()
 
-    with open('successful_insta_handle.txt', 'r') as f:
-        instagram_handle_list = f.readlines()
-
     with open('successful_insta_handle.txt', 'w') as f:
-        for insta_handle in instagram_handle_list[1:]:
-            f.write(insta_handle)
+        for line in handle_list[:-1]:
+            if '\n' not in line:
+                line += '\n'
+            f.write(line)
 except:
     driver.close()
-    with open('successful_insta_handle.txt', 'r') as f:
-        instagram_handle_list = f.readlines()
-
-    if len(pd.read_csv(output_csv_file)['url']) > 300*3*12:
-        instagram_handle_list.pop(0)
+    if os.path.isfile(output_csv_file) and len(pd.read_csv(output_csv_file)['url']) > 300*3*12:
+        with open('successful_insta_handle.txt', 'w') as f:
+            for line in handle_list[:-1]:
+                if '\n' not in line:
+                    line += '\n'
+                f.write(line)
+    if os.path.isfile(output_csv_file):
+        df = pd.read_csv(output_csv_file).drop(['Unnamed: 0'], axis=1)
+        pd.concat([df, pd.DataFrame(data)]).to_csv(output_csv_file)
     else:
-        instagram_handle_list = instagram_handle_list[1:]+[instagram_handle_list[0]]
-    
-    with open('successful_insta_handle.txt', 'w') as f:
-        for insta_handle in instagram_handle_list[1:]+[instagram_handle_list[0]]:
-            f.write(insta_handle)
+        pd.DataFrame(data).to_csv(output_csv_file)
