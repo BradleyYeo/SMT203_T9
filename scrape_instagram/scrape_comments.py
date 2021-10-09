@@ -31,9 +31,6 @@ with open('successful_insta_handle.txt', 'w') as f:
 
 handle = handle_list[-1].strip('@\n')
 
-with open('debug_info.txt', 'w') as f:
-    f.write(handle)
-
 if not handle:
     print('1'+1)
 
@@ -62,11 +59,13 @@ try:
     password.send_keys(instagram_password)
 
     #target the login button and click it
-    button = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
+    button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
 
     time.sleep(10)
 
     for target_date in target_date_list:
+        if len(target_date_list) >= 24:
+            break
         posts_to_scrape_list = []
         bsearch_count = 10
         target_date = datetime.datetime.strptime(target_date, '%Y-%m')
@@ -77,7 +76,7 @@ try:
             while lower+1 != upper:
                 temp_url = all_url_list[mid]
                 driver.get(temp_url)
-                temp_date = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "time[class='_1o9PC Nzb55']"))).get_attribute('datetime')
+                temp_date = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "time[class='_1o9PC Nzb55']"))).get_attribute('datetime')
                 temp_date = datetime.datetime.strptime(temp_date[:7], '%Y-%m')
                 if temp_date > target_date:
                     lower = mid
@@ -127,7 +126,7 @@ try:
             try_click_plus_btn_count = 10
             while try_click_plus_btn_count:
                 try:
-                    plus_btn = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[class='dCJp8 afkep']")))
+                    plus_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[class='dCJp8 afkep']")))
                     plus_btn.click()
                 except:
                     try_click_plus_btn_count -= 1
@@ -176,7 +175,7 @@ try:
             f.write(line)
 except:
     driver.close()
-    if os.path.isfile(output_csv_file) and len(pd.read_csv(output_csv_file)['url']) > 300*3*12:
+    if os.path.isfile(output_csv_file) and len(pd.read_csv(output_csv_file)['url']) > 300*12:
         with open('successful_insta_handle.txt', 'w') as f:
             for line in handle_list[:-1]:
                 if '\n' not in line:

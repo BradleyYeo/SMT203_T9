@@ -3,6 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 import time
+import datetime
 import pandas as pd
 
 is_first = True
@@ -26,12 +27,16 @@ for instagram_handle in instagram_handle_list:
     #open the webpage
     if is_first:
         is_first = False
+        temp_driver = webdriver.Chrome("chromedriver.exe")
         driver = webdriver.Chrome("chromedriver.exe")
         driver.get("http://www.instagram.com")
+        temp_driver.get("http://www.instagram.com")
 
         #target username
         username = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='username']")))
         password = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='password']")))
+        username1 = WebDriverWait(temp_driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='username']")))
+        password1 = WebDriverWait(temp_driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='password']")))
 
         #enter username and password
         username.clear()
@@ -39,8 +44,14 @@ for instagram_handle in instagram_handle_list:
         password.clear()
         password.send_keys(instagram_password)
 
+        username1.clear()
+        username1.send_keys(instagram_email)
+        password1.clear()
+        password1.send_keys(instagram_password)
+
         #target the login button and click it
-        button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
+        WebDriverWait(temp_driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
 
     instagram_url = f'https://www.instagram.com/{instagram_handle}/'
     time.sleep(5)
@@ -48,6 +59,10 @@ for instagram_handle in instagram_handle_list:
     time.sleep(5)
     list_url = []
     instagram_bio = ''
+
+    # get number of total post
+    total_post = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span[class='g47SY ']")))
+    total_post = int(total_post.text.replace(',', ''))
 
     # get instagram bio
     bio_container = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "-vDIg")))
@@ -106,7 +121,18 @@ for instagram_handle in instagram_handle_list:
         # Calculate new scroll height and compare with last scroll height
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height or time.time()-start_time > 600:
-            break
+            try_count1 = 5
+            while try_count1:
+                try:
+                    temp_driver.get(list_url[-1])
+                    time.sleep(5)
+                    temp_date = WebDriverWait(temp_driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "time[class='_1o9PC Nzb55']"))).get_attribute('datetime')
+                    temp_date = datetime.datetime.strptime(temp_date[:7], '%Y-%m')
+                    break
+                except:
+                    try_count -= 1
+            if temp_date < datetime.datetime.strptime('2020-01', '%Y-%m') or total_post <= len(list_url)+10 or not try_count1:
+                break
         last_height = new_height
 
     # remove the instagram handle from text file after finishing scraping
@@ -123,3 +149,4 @@ for instagram_handle in instagram_handle_list:
     df.to_csv(f'{instagram_handle}_url.csv')
 
 driver.close()
+temp_driver.close()
