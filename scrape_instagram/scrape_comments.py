@@ -124,10 +124,14 @@ try:
                 driver.get(temp_url)
             time.sleep(5)
             try_click_plus_btn_count = 10
+            num_clicks = 100
             while try_click_plus_btn_count:
                 try:
                     plus_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[class='dCJp8 afkep']")))
                     plus_btn.click()
+                    num_clicks -= 1
+                    if num_clicks <= 0:
+                        break
                 except:
                     try_click_plus_btn_count -= 1
             
