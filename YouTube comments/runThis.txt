@@ -1,9 +1,0 @@
- function next_video() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var endRow = ss.getSheets()[0].getLastRow();
-
-  for (var vv = 1; vv <= endRow; vv++){
-    console.log(vv);
-    scrapeCommentsWithReplies12(vv);
-    
-}}
